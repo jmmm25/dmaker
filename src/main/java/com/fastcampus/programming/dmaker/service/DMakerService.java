@@ -12,6 +12,7 @@ import com.fastcampus.programming.dmaker.exception.DMakerErrorCode;
 import com.fastcampus.programming.dmaker.exception.DMakerException;
 import com.fastcampus.programming.dmaker.repository.DeveloperRepository;
 import com.fastcampus.programming.dmaker.repository.RetiredDeveloperRepository;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,12 +44,14 @@ public class DMakerService {
         return CreateDeveloper.Response.fromEntity(developer);
     }
 
+    @Transactional(readOnly = true)
     public List<DeveloperDto> getAllEmployedDevelopers() {
         return developerRepository.findDevelopersByStatusCodeEquals(StatusCode.EMPLOYED)
                 .stream().map(DeveloperDto::fromEntity)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public DeveloperDetailDto getDeveloperDetail(String memberId) {
         return developerRepository.findByMemberId(memberId)
                 .map(DeveloperDetailDto::fromEntity)
@@ -57,7 +60,7 @@ public class DMakerService {
 
     @Transactional
     public DeveloperDetailDto editDeveloper(String memberId, EditDeveloper.Request request) {
-        validateEditDeveloperRequest(request);
+        validateDeveloperLevel(request.getDeveloperLevel(), request.getExperienceYears());
 
         Developer developer = developerRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new DMakerException(DMakerErrorCode.NO_DEVELOPER));
@@ -99,11 +102,7 @@ public class DMakerService {
         }
     }
 
-    private void validateEditDeveloperRequest(EditDeveloper.Request request) {
-        validateDeveloperLevel(request.getDeveloperLevel(), request.getExperienceYears());
-    }
-
-    private void validateCreateDeveloperRequest(CreateDeveloper.Request request) {
+    private void validateCreateDeveloperRequest(@NonNull CreateDeveloper.Request request) {
         validateDeveloperLevel(request.getDeveloperLevel(), request.getExperienceYears());
 
         developerRepository.findByMemberId(request.getMemberId())

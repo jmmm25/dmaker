@@ -8,7 +8,6 @@ import com.fastcampus.programming.dmaker.entity.DeveloperSkillType;
 import com.fastcampus.programming.dmaker.exception.DMakerErrorCode;
 import com.fastcampus.programming.dmaker.exception.DMakerException;
 import com.fastcampus.programming.dmaker.repository.DeveloperRepository;
-import com.fastcampus.programming.dmaker.repository.RetiredDeveloperRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,9 +30,6 @@ import static org.mockito.Mockito.verify;
 class DMakerServiceTest {
     @Mock
     private DeveloperRepository developerRepository;
-
-    @Mock
-    private RetiredDeveloperRepository retiredDeveloperRepository;
 
     @InjectMocks
     private DMakerService dMakerService;
