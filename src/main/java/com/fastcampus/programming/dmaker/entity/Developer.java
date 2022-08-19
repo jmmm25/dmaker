@@ -1,6 +1,7 @@
 package com.fastcampus.programming.dmaker.entity;
 
 import com.fastcampus.programming.dmaker.code.StatusCode;
+import com.fastcampus.programming.dmaker.dto.CreateDeveloper;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
