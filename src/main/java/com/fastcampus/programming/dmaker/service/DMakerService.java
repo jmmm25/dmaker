@@ -55,7 +55,7 @@ public class DMakerService {
 
     @Transactional
     public DeveloperDetailDto editDeveloper(String memberId, EditDeveloper.Request request) {
-        validateDeveloperLevel(request.getDeveloperLevel(), request.getExperienceYears());
+        request.getDeveloperLevel().validateExperienceYears(request.getExperienceYears());
 
         Developer developer = getDeveloperByMemberId(memberId);
         setDeveloperFromRequest(request, developer);
@@ -85,21 +85,8 @@ public class DMakerService {
         return DeveloperDetailDto.fromEntity(developer);
     }
 
-    private void validateDeveloperLevel(DeveloperLevel developerLevel, Integer experienceYears) {
-        if (developerLevel == DeveloperLevel.SENIOR && experienceYears < 10) {
-            throw new DMakerException(DMakerErrorCode.LEVEL_EXPERIENCE_YEARS_NOT_MATCHED);
-        }
-        if (developerLevel == DeveloperLevel.JUNGNIOR &&
-                (experienceYears < 4 || experienceYears > 10)) {
-            throw new DMakerException((DMakerErrorCode.LEVEL_EXPERIENCE_YEARS_NOT_MATCHED));
-        }
-        if (developerLevel == DeveloperLevel.JUNIOR && experienceYears > 4) {
-            throw new DMakerException((DMakerErrorCode.LEVEL_EXPERIENCE_YEARS_NOT_MATCHED));
-        }
-    }
-
     private void validateCreateDeveloperRequest(@NonNull CreateDeveloper.Request request) {
-        validateDeveloperLevel(request.getDeveloperLevel(), request.getExperienceYears());
+        request.getDeveloperLevel().validateExperienceYears(request.getExperienceYears());
 
         developerRepository.findByMemberId(request.getMemberId())
                 .ifPresent((developer -> {
